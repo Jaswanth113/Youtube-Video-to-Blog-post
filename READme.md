@@ -1,5 +1,7 @@
 Demo: https://youtube-video-to-blog-post-tvgqv3enznvp6wkksptzgk.streamlit.app/
 
+Works for YouTube Videos only
+
 Create .env file
 ```
 .env
@@ -12,6 +14,7 @@ python -m venv venv
 pip install r- requiremtns.txt 
 streamlit run main.py
 ```
+
 
 
 
