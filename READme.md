@@ -1,7 +1,7 @@
 Create .env file
 
 
-'''
+```
 .env
 GROQ_API_KEY="   "
 
@@ -11,4 +11,5 @@ python -m venv venv
 
 pip install r- requiremtns.txt 
 streamlit run main.py
-'''
+```
+
