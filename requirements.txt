@@ -1,0 +1,7 @@
+streamlit
+python-dotenv
+youtube-transcript-api
+langchain
+langchain-groq
+langgraph
+langchain-text-splitters
