@@ -1,5 +1,4 @@
-
-###Demo: https://youtube-video-to-blog-post-tvgqv3enznvp6wkksptzgk.streamlit.app/
+Demo: https://youtube-video-to-blog-post-tvgqv3enznvp6wkksptzgk.streamlit.app/
 
 Create .env file
 ```
@@ -13,6 +12,7 @@ python -m venv venv
 pip install r- requiremtns.txt 
 streamlit run main.py
 ```
+
 
 
 
