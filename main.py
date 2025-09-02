@@ -13,7 +13,7 @@ load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
 
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama-3.1-8b-instant", temperature=0.7)
-code_llm = ChatGroq(groq_api_key=groq_api_key, model_name="gemma2-9b-it", temperature=0.7)
+code_llm = ChatGroq(groq_api_key=groq_api_key, model_name="gemma2-9b-it", temperature=0.2)
 
 class VideoState(TypedDict):
     video_id: str
@@ -81,35 +81,36 @@ def generate_blog_node(state: VideoState) -> VideoState:
     transcript = state.get("transcript", "")
     
     prompt = f"""
-You are a skilled blog writer. Using the provided video summary and transcript, 
-create a polished blog post with the following structure:
+    You are a friendly and insightful productivity blogger. Your goal is to write a blog post that feels personal, actionable, and encouraging.
 
-Title:
-- Craft a short, catchy, and natural headline (7-12 words).
-- Make it engaging and clear for readers.
-- Do NOT include quotes, punctuation symbols, or formatting markers.
+    **YOUR OUTPUT MUST FOLLOW THIS MARKDOWN FORMAT EXACTLY, INCLUDING THE BLANK LINES BETWEEN SECTIONS:**
 
-Description:
-- Write 3 to 5 well-developed paragraphs.
-- Expand on the main ideas from the summary while drawing from the transcript.
-- Keep the language easy to read, engaging, and conversational.
-- Provide context, examples, or insights that add depth and value.
-- Ensure the flow feels natural, like a real blog post—not robotic or repetitive.
+    **Title:**  
+    [Write a clear and professional headline that directly reflects the main topic of the YouTube video. Keep it straightforward, natural, and within 7-12 words.]
 
-Conclusion:
-- Write a single concise paragraph.
-- Reinforce the core message and leave readers with a clear takeaway.
-- Do not restate the title; instead, close in a thoughtful, impactful way.
+    **Description:**  
+    [Write 3-5 detailed paragraphs expanding on the video content. Summarize the key points from the transcript in a smooth, natural flow. Add context, examples, or insights where relevant to make it engaging and easy to read. Avoid robotic repetition — make it feel like a professional blog article. Ensure paragraphs connect logically and the writing feels polished.]
 
-Video Summary:
-{summary}
+    **Conclusion:**  
+    [Write a single, detailed closing section of 1-3 paragraphs. Provide a thoughtful summary of the video's main message. Reinforce why it matters or how the reader can apply it. End with a motivating or insightful statement that leaves the reader with a strong takeaway.]
 
-Full Transcript:
-{transcript}
-"""
+    ---
+    **SOURCE MATERIAL:**
+
+    **Video Summary:**
+    {summary}
+
+    **Full Transcript:**
+    {transcript}
+    ---
+    """
     response = code_llm.invoke(prompt)
-    clean_response = response.content.strip()
-    return {"blog_post": clean_response}
+    
+    raw_blog_post = response.content.strip()
+    undesired_phrase = "Let me know if you have any questions!"
+    while undesired_phrase in raw_blog_post:
+        raw_blog_post = raw_blog_post.replace(undesired_phrase, "")
+    return {"blog_post": raw_blog_post}
 
 #langgraph structure
 workflow = StateGraph(VideoState)
